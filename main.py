@@ -106,7 +106,7 @@ async def on_ready():
     print("To pronto.")
 
 bot.run(
-    "MTI0MDM4ODk1NzcwMzc2NjE0Nw.GQE0G4.pdQqDBXcLhJNq6bod0gduqW_i5s6aNf9S0VP58")
+    "Token")
 
 while True:
     time.sleep(3600)
