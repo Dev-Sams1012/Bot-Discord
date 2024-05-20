@@ -1,13 +1,9 @@
-import os
-import time
-import asyncio
-import random as ra
-
 import discord
 from discord.ext import commands
+import asyncio
+import random as ra
+import time
 
-
-bot_token = os.getenv('DISCORD_TOKEN')
 
 permissoes = discord.Intents.default()
 permissoes.members = True
@@ -141,11 +137,8 @@ async def on_ready():
     print("To pronto.")
 
 
-if bot_token is None:
-    print("Token do bot não foi encontrado no campo das variáveis. Favor verificar arquivo .env")
-    exit()
-
-bot.run(bot_token)
+bot.run(
+    "token aqui")
 
 while True:
     time.sleep(3600)
