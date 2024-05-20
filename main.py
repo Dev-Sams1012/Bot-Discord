@@ -95,8 +95,7 @@ async def forca(ctx):
     tentativas = 6
     corretas = []
 
-    mensagem = f"**Jogo da Forca**\n\nPalavra: {mostrar_palavra_formatada
-    (palavra, letras_corretas)}\nDica: {categoria}\nTentativas restantes: {tentativas}"
+    mensagem = f"**Jogo da Forca**\n\nPalavra: {mostrar_palavra_formatada(palavra, letras_corretas)}\nDica: {categoria}\nTentativas restantes: {tentativas}"
     
     await ctx.send(mensagem)
 
