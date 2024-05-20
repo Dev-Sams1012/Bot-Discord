@@ -4,15 +4,13 @@ import asyncio
 import random as ra
 import time
 
-
 permissoes = discord.Intents.default()
-permissoes.members = True
 permissoes.message_content = True
 
 bot = commands.Bot(intents=permissoes, command_prefix=".")
 
 
-@bot.command(name='oi', help='Lhe cumprimenta e diz qual canal está.')
+@bot.command(name="oi", help="Lhe cumprimenta e diz qual canal está.")
 async def oi(ctx: commands.Context):
     usuario = ctx.author
     canal = ctx.channel
@@ -20,34 +18,67 @@ async def oi(ctx: commands.Context):
         f"oi {usuario.display_name}\nVocê está no canal {canal.name}")
 
 
-@bot.command(name='forca', help='Inicia o jogo da forca.')
+@bot.command(name="forca", help="Inicia o jogo da forca.")
 async def forca(ctx):
 
     def aleatorias():
-        lista = [
-            "banana", "abacaxi", "uva", "laranja", "morango", "maca", "limao",
-            "pera", "manga", "melancia", "cenoura", "beterraba", "tomate",
-            "cebola", "alface", "pimentao", "couve", "batata", "beterraba",
-            "abobora", "computador", "celular", "teclado", "mouse", "monitor",
-            "impressora", "tablet", "notebook", "carregador", "fone",
-            "cadeira", "mesa", "sofa", "cama", "guarda-roupa", "estante",
-            "armario", "rack", "pente", "escova", "shampoo", "condicionador",
-            "sabonete", "toalha", "creme", "espelho", "perfume", "sabao",
-            "detergente", "escova", "vassoura", "martelo", "serrote",
-            "chave de fenda", "chave de boca", "parafuso", "prego", "pregador",
-            "alicate", "furadeira", "seringa", "tesoura", "tesoura", "regua",
-            "lapis", "caneta", "borracha", "caderno", "livro", "revista",
-            "jornal", "copo", "prato", "talheres", "panela", "frigideira",
-            "colher", "garfo", "faca", "esponja", "balde", "mangueira",
-            "tinta", "pincel", "quadro", "porta", "janela", "telhado",
-            "calcada", "portao", "cerca", "grampo", "linha", "agulha", "botao",
-            "fivela", "ziper", "corrente", "relogio", "anel", "pulseira",
-            "brinco", "colar", "oculos", "bone", "chapeu"
+        # Definição das sub-listas
+        frutas_e_vegetais = [
+            'banana', 'abacaxi', 'uva', 'laranja', 'morango', 'maca', 'limao',
+            'pera', 'manga', 'melancia', 'cenoura', 'beterraba', 'tomate',
+            'cebola', 'alface', 'pimentao', 'couve', 'batata', 'beterraba',
+            'abobora'
+        ]
+        tecnologia = [
+            'computador', 'celular', 'teclado', 'mouse', 'monitor',
+            'impressora', 'tablet', 'notebook', 'carregador', 'fone'
+        ]
+        moveis = [
+            'cadeira', 'mesa', 'sofa', 'cama', 'guarda-roupa', 'estante',
+            'armario', 'rack'
+        ]
+        produtos_de_higiene = [
+            'pente', 'escova', 'shampoo', 'condicionador', 'sabonete',
+            'toalha', 'creme', 'espelho', 'perfume', 'sabao', 'detergente',
+            'escova', 'vassoura'
+        ]
+        ferramentas_e_materiais = [
+            'martelo', 'serrote', 'chave_de_fenda', 'chave_de_boca',
+            'parafuso', 'prego', 'pregador', 'alicate', 'furadeira', 'seringa',
+            'tesoura', 'regua', 'lapis', 'caneta', 'borracha', 'caderno',
+            'livro', 'revista', 'jornal'
+        ]
+        utensilios_de_cozinha = [
+            'copo', 'prato', 'talheres', 'panela', 'frigideira', 'colher',
+            'garfo', 'faca', 'esponja', 'balde', 'mangueira'
+        ]
+        materiais_de_construcao = [
+            'tinta', 'pincel', 'quadro', 'porta', 'janela', 'telhado',
+            'calcada', 'portao', 'cerca'
+        ]
+        itens_de_costura_e_acessorios = [
+            'grampo', 'linha', 'agulha', 'botao', 'fivela', 'ziper',
+            'corrente', 'relogio', 'anel', 'pulseira', 'brinco', 'colar',
+            'oculos', 'bone', 'chapeu'
         ]
 
-        aleatorio = ra.choice(lista)
+        # Dicionário de categorias
+        categorias = {
+            'Frutas e Vegetais': frutas_e_vegetais,
+            'Tecnologia': tecnologia,
+            'Móveis': moveis,
+            'Produtos de Higiene': produtos_de_higiene,
+            'Ferramentas e Materiais': ferramentas_e_materiais,
+            'Utensílios de Cozinha': utensilios_de_cozinha,
+            'Materiais de Construção': materiais_de_construcao,
+            'Itens de Costura e Acessórios': itens_de_costura_e_acessorios
+        }
 
-        return aleatorio
+        # Escolher uma categoria e uma palavra aleatoriamente
+        categoria, palavras = ra.choice(list(categorias.items()))
+        palavra = ra.choice(palavras)
+
+        return palavra, categoria
 
     def mostrar_palavra_formatada(palavra, letras_corretas):
         resultado = ""
@@ -56,21 +87,23 @@ async def forca(ctx):
                 resultado += letra + " "  # Destaca letras corretas em negrito
                 corretas.append(letra)
             else:
-                resultado += '- '  # Letras desconhecidas são mostradas como "__" (sublinhadas)
+                resultado += "- "  # Letras desconhecidas são mostradas como "__" (sublinhadas)
         return resultado.strip()
 
-    palavra = aleatorias()
+    palavra, categoria = aleatorias()
     letras_corretas = []
     tentativas = 6
     corretas = []
 
-    mensagem = f'**Jogo da Forca**\n\nPalavra: {mostrar_palavra_formatada(palavra, letras_corretas)}\nTentativas restantes: {tentativas}'
+    mensagem = f"**Jogo da Forca**\n\nPalavra: {mostrar_palavra_formatada
+    (palavra, letras_corretas)}\nDica: {categoria}\nTentativas restantes: {tentativas}"
+    
     await ctx.send(mensagem)
 
     while tentativas > 0:
         try:
             mensagem = await bot.wait_for(
-                'message',
+                "message",
                 check=lambda m: m.author == ctx.author and m.content.isalpha(),
                 timeout=60)
             letra = mensagem.content.lower()
@@ -81,12 +114,12 @@ async def forca(ctx):
                 letras_corretas.append(letra)
                 palavra_mostrada = mostrar_palavra_formatada(
                     palavra, letras_corretas)
-                mensagem = f'Palavra: {palavra_mostrada}\nTentativas restantes: {tentativas}'
+                mensagem = f"Palavra: {palavra_mostrada}\nTentativas restantes: {tentativas}"
                 await ctx.send("Letra correta!")
                 await ctx.send(mensagem)
             elif letra not in corretas and letra not in palavra:
                 tentativas -= 1
-                mensagem = f'Tentativas restantes: {tentativas}'
+                mensagem = f"Tentativas restantes: {tentativas}"
                 await ctx.send("Você errou.")
                 await ctx.send(mensagem)
 
@@ -95,7 +128,7 @@ async def forca(ctx):
                 break
 
         except asyncio.TimeoutError:
-            await ctx.send('Tempo esgotado. O jogo da forca foi encerrado.')
+            await ctx.send("Tempo esgotado. O jogo da forca foi encerrado.")
             return
 
     if tentativas == 0:
@@ -104,33 +137,34 @@ async def forca(ctx):
 
 @bot.command()
 async def enviar_embed(ctx):
-    embed = discord.Embed(
-        title="Título do Embed",
-        description="Descrição do Embed",
-        color=discord.Color.from_str("#2B2014"))
+    embed = discord.Embed(title="Título do Embed",
+                          description="Descrição do Embed",
+                          color=discord.Color.from_str("#2B2014"))
 
     logo_arquivo = discord.File("PyBot.png", filename="PyBot.png")
-    embed.set_image(url = "attachment://PyBot.png")
+    embed.set_image(url="attachment://PyBot.png")
 
-    embed.set_author(name="Samuca :)", url="https://www.instagram.com/samuel.au.ab/")
+    embed.set_author(name="Samuca :)",
+                     url="https://www.instagram.com/samuel.au.ab/")
 
-    await ctx.send(files=[logo_arquivo],embed=embed)
+    await ctx.send(files=[logo_arquivo], embed=embed)
 
 
 @bot.event
 async def membronovo(membro: discord.Member):
     canal = bot.get_channel(1240418803574243358)
-    embed = discord.Embed(
-        title=f"Seja bem-vindo, {membro.display_name}!!",
-        description="Aproveite o servidor!",
-        color=discord.Color.from_str("#2B2014"))
+    embed = discord.Embed(title=f"Seja bem-vindo, {membro.display_name}!!",
+                          description="Aproveite o servidor!",
+                          color=discord.Color.from_str("#2B2014"))
 
     logo_arquivo = discord.File("PyBot.png", filename="PyBot.png")
-    embed.set_image(url = "attachment://PyBot.png")
+    embed.set_image(url="attachment://PyBot.png")
 
-    embed.set_author(name="Samuca :)", url="https://www.instagram.com/samuel.au.ab/")
+    embed.set_author(name="Samuca :)",
+                     url="https://www.instagram.com/samuel.au.ab/")
 
-    await canal.send(files=[logo_arquivo],embed=embed)
+    await canal.send(files=[logo_arquivo], embed=embed)
+
 
 @bot.event
 async def on_ready():
@@ -138,7 +172,7 @@ async def on_ready():
 
 
 bot.run(
-    "token aqui")
+    "token")
 
 while True:
     time.sleep(3600)
