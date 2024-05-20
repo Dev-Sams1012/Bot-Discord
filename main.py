@@ -1,7 +1,13 @@
+import os
+import time
+import asyncio
+import random as ra
+
 import discord
 from discord.ext import commands
-import random as ra
-import time
+
+
+bot_token = os.getenv('DISCORD_TOKEN')
 
 permissoes = discord.Intents.default()
 permissoes.members = True
@@ -100,13 +106,46 @@ async def forca(ctx):
         await ctx.send(f"Perdeu, a palavra era {palavra}.")
 
 
+@bot.command()
+async def enviar_embed(ctx):
+    embed = discord.Embed(
+        title="Título do Embed",
+        description="Descrição do Embed",
+        color=discord.Color.from_str("#2B2014"))
+
+    logo_arquivo = discord.File("PyBot.png", filename="PyBot.png")
+    embed.set_image(url = "attachment://PyBot.png")
+
+    embed.set_author(name="Samuca :)", url="https://www.instagram.com/samuel.au.ab/")
+
+    await ctx.send(files=[logo_arquivo],embed=embed)
+
+
+@bot.event
+async def membronovo(membro: discord.Member):
+    canal = bot.get_channel(1240418803574243358)
+    embed = discord.Embed(
+        title=f"Seja bem-vindo, {membro.display_name}!!",
+        description="Aproveite o servidor!",
+        color=discord.Color.from_str("#2B2014"))
+
+    logo_arquivo = discord.File("PyBot.png", filename="PyBot.png")
+    embed.set_image(url = "attachment://PyBot.png")
+
+    embed.set_author(name="Samuca :)", url="https://www.instagram.com/samuel.au.ab/")
+
+    await canal.send(files=[logo_arquivo],embed=embed)
 
 @bot.event
 async def on_ready():
     print("To pronto.")
 
-bot.run(
-    "Token")
+
+if bot_token is None:
+    print("Token do bot não foi encontrado no campo das variáveis. Favor verificar arquivo .env")
+    exit()
+
+bot.run(bot_token)
 
 while True:
     time.sleep(3600)
